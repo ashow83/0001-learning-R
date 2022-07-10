@@ -1,0 +1,23 @@
+---
+Curso: Formação Cientista de Dados 
+
+Prof.: Fernando Amaral
+
+Aluno: Adriano Show
+
+Data: 09/07/2022 - 23:48
+
+Assunto: Funções
+---
+
+```{r}
+getwd()
+
+#sem parenteses
+
+sd
+head(x=iris, n=2)
+head(iris)
+head(iris,2)
+head(n=22)
+```

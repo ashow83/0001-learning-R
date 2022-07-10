@@ -1,0 +1,19 @@
+---
+Curso: Formação Cientista de Dados 
+
+Prof.: Fernando Amaral
+
+Aluno: Adriano Show
+
+Data: 09/07/2022 - 23:53
+
+Assunto: Ajuda
+---
+
+```{r}
+
+help(sd) # help em RStudio
+
+head(iris)
+```
+

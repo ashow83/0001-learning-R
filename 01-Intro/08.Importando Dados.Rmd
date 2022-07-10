@@ -1,0 +1,31 @@
+---
+Curso: Formação Cientista de Dados 
+
+Prof.: Fernando Amaral
+
+Aluno: Adriano Show
+
+Data: 09/07/2022 - 0:10
+
+Assunto: Importando Dados
+---
+```{r}
+#install.packages("xlsx")
+library(xlsx)
+```
+---
+Texto - trabalhando com arquivo texto CSV
+---
+```{r}
+#texto
+x = read.csv(file.choose(),header = TRUE, sep = ",") # opção de janaela para escolher o arquivo 
+x
+x = read.csv("Credit.csv",header = TRUE, sep = ",") # passa o arquivo direto obs arquivo na mesma pasta obs. caminho
+```
+---
+Excel - trabalhando com arquivos nativo do Excel 
+---
+```{r}
+dados = read.xlsx("Credit.xlsx",sheetIndex = 1) # lendo diretamento no diretorio
+dados
+```
