@@ -1,0 +1,231 @@
+---
+Curso: Formação Cientista de Dados 
+Prof.: Fernando Amaral
+Aluno: Adriano Show
+Data: 09/07/2022 - 23:26
+
+Assunto: Limpeza e Tratamentos de dados 
+---
+
+---
+Passo 01: Importando base de dados bdSaldo
+---
+```{r}
+# imprta dados, string vazio como NA, sstring fatores 
+bdsaldo = read.csv("bdsaldo.csv", sep = ";", na.strings="", stringsAsFactors=T)
+
+# lendo a base importada 
+head(bdsaldo)
+
+summary(bdsaldo)
+
+```
+---
+Passo 02: Tratando as colunas 
+---
+```{r}
+# Dar nomes as colunas 
+colnames(bdsaldo) = 
+c("Id","Score","Estado","Genero","Idade","Patrimonio","Saldo","Produtos"
+,"TemCartCredito","Ativo","Salario","Saiu")
+
+head(bdsaldo)
+
+```
+---
+Passo 03: Explorando bdsaldo, colunas categórias
+---
+```{r}
+# coluna Estados
+qt.estado = table(bdsaldo$Estado) # atribui a soma da qtd de valores iguais 
+qt.estado # mostra em tela
+
+barplot(qt.estado, main="Estados", xlab="Estado") # gera grafíco de colunas
+
+# coluna Gênero
+qt.genero = table(bdsaldo$Genero)
+qt.genero
+
+barplot(qt.genero, main="Gêneros", xlab="Gêneros")
+
+```
+---
+Passo 04: Explorando bdsaldo, colunas numéricas
+---
+```{r}
+# coluna Score
+summary(bdsaldo$Score)
+boxplot(bdsaldo$Score)
+hist(bdsaldo$Score)
+
+# coluna Idade
+summary(bdsaldo$Idade)
+boxplot(bdsaldo$Idade)
+hist(bdsaldo$Idade)
+
+# coluna Saldo
+summary(bdsaldo$saldo)
+boxplot(bdsaldo$Saldo)
+hist(bdsaldo$Saldo)
+
+#coluna Salário
+summary(bdsaldo$Salario)
+boxplot(bdsaldo$Salario)
+boxplot(bdsaldo$Salario,outline = F)
+```
+---
+Passo 05: Valores faltantes - NAs colunas sem dados
+---
+```{r}
+# valores faltantes NAs
+bdsaldo[!complete.cases(bdsaldo),] # passando vazio para NA
+
+```
+---
+Passo 06: Tratamento coluna Salários
+---
+```{r}
+# Tratar salários
+summary(bdsaldo$Salario) # mostrando dados originais 
+
+# ver mediana
+median(bdsaldo$Salario,na.rm =T) # "na.rm=T" para ver a mediana ignorando as "NAs" = colunas vazias
+
+# atribuir mediana as NAs - colunas vazia (obs..a mediana não vai interfererir na amostragem)
+bdsaldo[is.na(bdsaldo$Salario),]$Salario = median(bdsaldo$Salario,na.rm=T)
+
+# chegar se ainda tem NAs em Salario
+bdsaldo[!complete.cases(bdsaldo$Salario),]
+```
+---
+Passo 07: Tratamento em coluna despadronizada 
+---
+
+```{r}
+############################
+# tratando - coluna Gênero #
+############################
+
+unique(bdsaldo$Genero) # mostra valores 1x
+summary(bdsaldo$Genero)
+
+# transformar F e FEM em Feminino
+#"", M em Masculino (moda) - quando nulo " " aplicar a moda
+
+bdsaldo[is.na(bdsaldo$Genero) | bdsaldo$Genero == "M" ,]$Genero = "Masculino"  #substitui dados
+
+bdsaldo[bdsaldo$Genero == "F" | bdsaldo$Genero == "Fem", ]$Genero = "Feminino" #substitui dados
+
+# ver resultado
+
+summary(bdsaldo$Genero)
+
+# remove leves "dados substituido que ficou VAZIO" não utilizados
+
+bdsaldo$Genero = factor(bdsaldo$Genero)
+
+# visualizar como ficou por fim 
+summary(dados$Genero)
+
+#############################################
+# Tratando coluna idade -   fora do domínio #
+#############################################
+
+summary(bdsaldo$Idade)
+
+# fora do dominio, numérico - ver idades anormais
+bdsaldo[bdsaldo$Idade<0 | bdsaldo$Idade>110 ,]$Idade
+
+# ver se tem Idade NUll "NAs"
+bdsaldo[is.na(bdsaldo$Idade),]
+
+# opção escolhida para para idades fora do dominio
+median(bdsaldo$Idade)
+
+# substituir idades fora do dominio pela MEDIANA
+bdsaldo[bdsaldo$Idade<0 | bdsaldo$Idade>110 ,]$Idade = median(bdsaldo$Idade)
+
+# conferindo idades anormais fora do dominio
+
+bdsaldo[bdsaldo$Idade<0 | bdsaldo$Idade>110 ,]
+summary(bdsaldo$Idade)
+
+#############################################
+# Tratando dados duplicados pela coluna ID  #
+#############################################
+
+#buscar duplicados coluna ID
+x = bdsaldo[duplicated(bdsaldo$Id),]
+x
+
+# verificado que o ID 81 é duplicado
+# será excluido pelo indice 82
+bdsaldo = bdsaldo[-c(82),]
+
+# comparando se tem a linha duplicado
+bdsaldo[bdsaldo$Id == x$Id ,]
+
+#verificamos novamente duplicados
+x1 = bdsaldo[duplicated(bdsaldo$Id),]
+x1
+
+#############################################
+# Tratando colunaEstado fora do domínio     #
+#############################################
+
+# fora do dominio  - categorico
+unique(bdsaldo$Estado) # volta valores unicos sem ser repetidos
+summary(bdsaldo$Estado) # qtd de por estados
+
+# utilizar a MODA, RS para substituir criterios fora do dominio
+bdsaldo[!bdsaldo$Estado %in% c("RS","SC","PR"),]$Estado = "RS"
+summary(bdsaldo$Estado)
+
+
+#remover fatores/criterios não sendo utilizado
+bdsaldo$Estado = factor(bdsaldo$Estado)
+
+#visualizar novamente
+summary(dados$Estado)
+
+```
+
+Passso 08: Tratando dados "outliers" - valores que foge da normalidade
+
+```{R}
+# outliers, criando um paramentro com desvio padrão
+
+desv = sd(bdsaldo$Salario, na.rm = T)
+desv
+bdsaldo[bdsaldo$Salario >= 2 *desv , ]$Salario
+
+# outra forma, resultado semelhante, mas sem os NAs
+boxplot(bdsaldo$Salario)
+boxplot(bdsaldo$Salario, outline = F)
+x2 = boxplot(bdsaldo$Salario)$out
+x2
+
+
+#atualizamos todos para mediana
+
+bdsaldo[is.na(bdsaldo$Salario),]$Salario = median(bdsaldo$Salario,na.rm = T)
+
+median(bdsaldo$Salario)
+
+bdsaldo[bdsaldo$Salario >= 2 *desv , ]$Salario = median(bdsaldo$Salario)
+
+# checar se sairam os outliers
+bdsaldo[bdsaldo$Salario >= 2 *desv , ]$Salario
+
+
+```
+
+
+
+
+
+
+
+
+
+
