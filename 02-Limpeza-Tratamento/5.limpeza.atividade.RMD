@@ -1,0 +1,159 @@
+---
+Curso: Formação Cientista de Dados 
+
+Prof.: Fernando Amaral
+
+Aluno: Adriano Show
+
+Data: 13/07/2022 - 220:00
+
+Assunto: Atividade - faça vc mesmo
+---
+```{r}
+
+#tempo = read.csv("tempo.csv", sep = ";", na.strings="",
+#stringsAsFActors=T)
+
+
+tempo = read.csv("tempo.csv", sep = ";", na.strings = "", stringsAsFactors = T)
+
+
+head(tempo)
+
+summary(tempo)
+
+
+```
+
+```{r}
+# explorar dados, Aparência
+
+# aparencia
+
+counts = table(tempo$Aparencia)
+counts
+barplot(counts, main="Aparencia", xlab="Aparencia")
+
+#Gênero
+counts = table(tempo$Vento)
+counts
+barplot(counts, main="Vento", xlab="Vento")
+
+#Jogar
+counts = table(tempo$Jogar)
+counts
+barplot
+
+```
+
+
+```{r}
+
+#Explorar, colunas numéricas
+
+#Temperatura
+summary(tempo$Temperatura)
+boxplot(tempo$Temperatura)
+hist(tempo$Temperatura)
+
+#Umidade
+summary(tempo$Umidade)
+boxplot(tempo$Umidade)
+hist(tempo$Umidade)
+
+```
+
+
+```{r}
+#valores faltantes NAs
+
+tempo[!complete.cases(tempo),]
+
+
+#aparencia tratar dominio
+
+summary(tempo$Aparencia)
+#não temos NAs
+
+tempo[is.na(tempo$Aparencia),]
+#opção, preencher com mediana
+
+#subtituição com moda
+tempo[tempo$Aparencia == 'menos' ,]$Aparencia = 'sol' 
+
+#buscamos novamente aparencias
+summary(tempo$Aparencia)
+
+#remover levels não utilizados
+tempo$Aparencia =   factor(tempo$Aparencia)
+
+#visualizar novamente
+summary(tempo$Aparencia)
+
+
+```
+
+
+```{r}
+
+#Temperatura - tratar dominio
+
+summary(tempo$Temperatura)
+#fora do dominio, numérico - ver idades anormais
+
+tempo[tempo$Temperatura < -130 | tempo$Temperatura > 130 ,]$Temperatura
+
+#não temos NAs
+tempo[is.na(tempo$Temperatura),]
+
+#opção, preencher com mediana
+median(dados$Temperatura)
+
+#subtituição
+tempo[tempo$Temperatura < -135 | tempo$Temperatura > 130 ,]$Temperatura = median(tempo$Temperatura) 
+
+#buscamos novamente temperaturas anormais
+tempo[tempo$Temperatura< -135 | tempo$Temperatura > 130 ,]$Temperatura
+summary(tempo$Temperatura)
+```
+
+```{r}
+
+#Umidade, dominio e NAs
+
+summary(tempo$Umidade)
+
+#fora do dominio, numérico - ver idades anormais
+tempo[tempo$Umidade < 0 | tempo$Umidade > 100 ,]$Umidade
+
+#Verifica NAs
+tempo[is.na(tempo$Umidade),]
+
+#atribuir mediana a NAs
+tempo[is.na(tempo$Umidade),]$Umidade = median(tempo$Umidade,na.rm = T)
+
+#subtituição
+tempo[tempo$Umidade < 0 | tempo$Umidade > 100 ,]$Umidade = median(tempo$Umidade) 
+
+#buscamos novamente idades anormais
+tempo[tempo$Umidade < 0 | tempo$Umidade > 100 ,]
+summary(tempo$Umidade)
+```
+
+```{r}
+
+#Vento NAs
+
+summary(tempo$Vento)
+
+#Verifica NAs
+tempo[is.na(tempo$Vento),]
+
+#substitui
+tempo[is.na(tempo$Vento),]$Vento = 'FALSO'
+
+#Verifica NAs
+tempo[is.na(tempo$Vento),]
+summary(tempo$Vento)
+```
+
