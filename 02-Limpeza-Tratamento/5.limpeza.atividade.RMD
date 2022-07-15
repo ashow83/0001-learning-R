@@ -156,3 +156,4 @@ tempo[is.na(tempo$Vento),]$Vento = 'FALSO'
 tempo[is.na(tempo$Vento),]
 summary(tempo$Vento)
 ```
+
