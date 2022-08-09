@@ -1,0 +1,35 @@
+---
+Curso: Formação Cientista de Dados
+Prof.: Fernando Amaral
+Aluno: Adriano Show
+Data: 08/08/2022 - 21:41
+Assunto: Regressão Linear - Faça você mesmo
+---
+Importando os Dados
+```{r}
+dados = read.csv("slr12.csv",sep = ";")
+dados
+```
+Modelo
+```{r}
+modelo = lm(CusInic ~ FrqAnual, data=dados)
+modelo
+```
+
+```{r}
+#Executar com ctrl + shift + enter
+#gráfico
+plot(CusInic ~ FrqAnual, data=dados)
+abline(modelo)
+```
+
+```{r}
+#usando o modelo
+#valor anual da franquina
+valr =  1300
+#prevendo
+prev =  predict(modelo,data.frame(FrqAnual = valr))
+prev = paste0("Previsão de Custo Inicial R$: ",round(prev,2))
+print(prev)
+```
+
